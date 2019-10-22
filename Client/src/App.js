@@ -1,5 +1,15 @@
 import React from 'react';
+import Header from './components/Header';
+import LocationInput from './components/LocationInput';
+import { Container } from 'reactstrap';
+import ResultsTable from './components/ResultsTable';
 
 export default () => (
-  <h1>Hello World!</h1>
+  <Container>
+    <div className="wrapper">
+      <Header />
+      <LocationInput />
+      <ResultsTable />
+    </div>
+  </Container>
 );
