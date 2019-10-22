@@ -23,7 +23,7 @@ namespace WeatherApp
 
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/build";
+                configuration.RootPath = "../Client/build";
             });
         }
 
@@ -52,7 +52,7 @@ namespace WeatherApp
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "../Client/";
 
                 if (env.IsDevelopment())
                 {
