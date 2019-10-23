@@ -66,7 +66,7 @@ class LocationInput extends Component {
                     <h3 className="float-left">Search</h3>
                 </Row>
                 <Row className="justify-content-center align-items-center">
-                    <Col lg="6">
+                    <Col lg="8">
                         {this.renderPlacesAutoComplete()}
                     </Col>
                 </Row >
