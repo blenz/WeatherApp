@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WeatherApp.Helpers;
 
 namespace WeatherApp
 {
@@ -18,6 +19,8 @@ namespace WeatherApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.Configure<OpenWeatherConfig>(Configuration.GetSection("OpenWeather"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
