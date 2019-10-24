@@ -3,6 +3,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Server.Dto;
+using Server.Models;
 using WeatherApp.Helpers;
 
 namespace WeatherApp.Controllers
@@ -18,8 +21,8 @@ namespace WeatherApp.Controllers
             _openWeatherConfig = openWeatherConfig;
         }
 
-        [HttpGet()]
-        public async Task<IActionResult> Get()
+        [HttpPost()]
+        public async Task<IActionResult> PostWeather([FromBody] WeatherForCreationDto weatherForCreation)
         {
             using(var client = new HttpClient())
             {
@@ -27,9 +30,23 @@ namespace WeatherApp.Controllers
                 {
                     client.BaseAddress = new Uri(_openWeatherConfig.Value.Uri);
 
-                    var response = await client.GetAsync($"{_openWeatherConfig.Value.Path}?q=London&appid={_openWeatherConfig.Value.Key}");
+                    var query = $"?appid={_openWeatherConfig.Value.Key}&units=imperial&lat={weatherForCreation.Lat}&lon={weatherForCreation.Lon}";
 
-                    return Ok(response);
+                    var response = await client.GetAsync(query);
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    var weatherResponse = JsonConvert.DeserializeObject<OpenWeatherResponse>(content);
+
+                    var weather = new Weather
+                    {
+                        Address = weatherForCreation.Address,
+                        CurrentTemp = float.Parse(weatherResponse.Main.CurrentTemp),
+                        MinTemp = float.Parse(weatherResponse.Main.MinTemp),
+                        MaxTemp = float.Parse(weatherResponse.Main.MaxTemp),
+                        Cached = false
+                    };
+
+                    return Ok(weather);
                 }
                 catch (HttpRequestException httpRequestException)
                 {
