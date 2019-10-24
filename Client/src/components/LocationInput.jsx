@@ -8,16 +8,66 @@ import { Container, Row, Col, InputGroup, Input, InputGroupAddon, Button } from 
 
 
 class LocationInput extends Component {
-    state = {
-        address: ''
+    initialState = {
+        address: '',
+        lat: null,
+        lon: null,
+        zip: null
+    };
+    state = this.initialState;
+
+    handleSelect = async address => {
+
+        this.setState({ address });
+
+        try {
+
+            const results = await geocodeByAddress(address);
+
+            const latLon = await getLatLng(results[0]);
+
+            const zip = parseInt(
+                results[0]
+                    .address_components[6]
+                    .long_name, 10
+            );
+
+            this.setState({
+                lat: latLon.lat,
+                lon: latLon.lng,
+                zip
+            });
+        }
+        catch (error) {
+            this.clearWeather();
+            console.log(error);
+        }
+
+    };
+
+    getWeather = async () => {
+        try {
+            await fetch(
+                process.env.REACT_APP_WEATHER_URL,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.state)
+                }
+            );
+        } catch (error) {
+            this.clearWeather();
+            console.log(error);
+        }
+
+        this.clearWeather()
     }
 
-    handleSelect = address => {
-        geocodeByAddress(address)
-            .then(results => getLatLng(results[0]))
-            .then(latLng => { this.setState({ address }); })
-            .catch(error => console.error('Error', error));
-    };
+    clearWeather = () => {
+        this.setState(this.initialState);
+    }
 
     renderPlacesAutoComplete() {
         return (
@@ -26,6 +76,7 @@ class LocationInput extends Component {
                 onChange={address => this.setState({ address })}
                 onSelect={this.handleSelect}
                 searchOptions={{ types: ['address'] }}
+                onError={(_, clearSuggestions) => clearSuggestions()}
             >
                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                     <InputGroup>
@@ -33,7 +84,7 @@ class LocationInput extends Component {
                         <Input value={this.state.address} type="text" {...getInputProps({ placeholder: 'Search Address' })} />
 
                         <ul className="list-group" style={{ position: 'absolute', width: 'inherit', marginTop: '40px' }}>
-                            {loading && <div>Loading...</div>}
+                            {loading && <li className="list-group-item">Loading...</li>}
 
                             {suggestions.map(suggestion => {
 
@@ -49,8 +100,8 @@ class LocationInput extends Component {
                             })}
                         </ul>
                         <InputGroupAddon addonType="append">
-                            <Button color="success" onClick={() => console.log('Hello')}>Search</Button>
-                            <Button outline color="secondary" onClick={() => this.setState({ address: '' })}>Clear</Button>
+                            <Button disabled={!this.state.lat && !this.state.lon} color="success" onClick={() => this.getWeather()}>Get Weather</Button>
+                            <Button outline color="secondary" onClick={() => this.clearWeather()}>Clear</Button>
                         </InputGroupAddon>
                     </InputGroup>
                 )
