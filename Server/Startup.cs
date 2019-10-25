@@ -21,6 +21,8 @@ namespace WeatherApp
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<OpenWeatherConfig>(Configuration.GetSection("OpenWeather"));
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -34,6 +36,9 @@ namespace WeatherApp
                 app.UseHsts();
             }
 
+            app.UseCors(x =>
+                x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+            );
             app.UseHttpsRedirection();
             app.UseMvc();
         }
