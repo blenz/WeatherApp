@@ -5,8 +5,6 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { Container, Row, Col, InputGroup, Input, InputGroupAddon, Button } from 'reactstrap';
 
-
-
 class LocationInput extends Component {
     initialState = {
         address: '',
@@ -42,12 +40,11 @@ class LocationInput extends Component {
             this.clearWeather();
             console.log(error);
         }
-
     };
 
-    getWeather = async () => {
+    searchWeather = async () => {
         try {
-            await fetch(
+            const response = await fetch(
                 process.env.REACT_APP_WEATHER_URL,
                 {
                     method: 'POST',
@@ -57,8 +54,12 @@ class LocationInput extends Component {
                     body: JSON.stringify(this.state)
                 }
             );
+
+            const weather = await response.json();
+
+            this.props.addWeather(weather);
+
         } catch (error) {
-            this.clearWeather();
             console.log(error);
         }
 
@@ -100,7 +101,7 @@ class LocationInput extends Component {
                             })}
                         </ul>
                         <InputGroupAddon addonType="append">
-                            <Button disabled={!this.state.lat && !this.state.lon} color="success" onClick={() => this.getWeather()}>Get Weather</Button>
+                            <Button disabled={!this.state.lat && !this.state.lon} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
                             <Button outline color="secondary" onClick={() => this.clearWeather()}>Clear</Button>
                         </InputGroupAddon>
                     </InputGroup>

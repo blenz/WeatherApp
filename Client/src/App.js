@@ -1,15 +1,9 @@
 import React from 'react';
-import Header from './components/Header';
-import LocationInput from './components/LocationInput';
 import { Container } from 'reactstrap';
-import ResultsTable from './components/ResultsTable';
+import WeatherChecker from './components/WeatherChecker';
 
 export default () => (
   <Container>
-    <div className="wrapper">
-      <Header />
-      <LocationInput />
-      <ResultsTable />
-    </div>
+    <WeatherChecker />
   </Container>
 );

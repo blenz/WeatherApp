@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row, Badge } from 'reactstrap';
 
-export default () => (
-    <Container className="p-5">
+const ResultsTable = ({ weathers }) => (
+    < Container className="p-5" >
         <Row>
             <h3 className="float-left">Results</h3>
         </Row>
@@ -10,24 +10,30 @@ export default () => (
             <table className='table table-striped'>
                 <thead>
                     <tr>
-                        <th>Location</th>
-                        <th>Temp.</th>
+                        <th>Address</th>
+                        <th>Current Temp</th>
+                        <th>Min Temp</th>
+                        <th>Max Temp</th>
                         <th>Cached</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Foo</td>
-                        <td>100</td>
-                        <td><Badge color="danger" pill>Hit</Badge></td>
-                    </tr>
-                    <tr>
-                        <td>Bar</td>
-                        <td>60</td>
-                        <td><Badge color="secondary" pill>Miss</Badge></td>
-                    </tr>
+                    {
+                        weathers.map((weather, i) => (
+                            <tr key={i}>
+                                <td>{weather.address}</td>
+                                <td>{weather.currentTemp}</td>
+                                <td>{weather.minTemp}</td>
+                                <td>{weather.maxTemp}</td>
+                                <td><Badge color="danger" pill>Hit</Badge></td>
+                            </tr>
+                        ))
+                    }
                 </tbody>
             </table>
         </Row>
-    </Container>
+    </Container >
 );
+
+
+export default ResultsTable;
