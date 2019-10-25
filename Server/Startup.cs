@@ -21,8 +21,17 @@ namespace WeatherApp
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<OpenWeatherConfig>(Configuration.GetSection("OpenWeather"));
+            services.Configure<RedisConfig>(Configuration.GetSection("Redis"));
 
             services.AddCors();
+
+            var redisConfig = Configuration.GetSection("Redis").Get<RedisConfig>();
+
+            services.AddDistributedRedisCache(option =>
+            {
+                option.Configuration = redisConfig.Configuration;
+                option.InstanceName = redisConfig.InstanceName;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
