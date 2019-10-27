@@ -107,7 +107,7 @@ class LocationInput extends Component {
                             })}
                         </ul>
                         <InputGroupAddon addonType="append">
-                            <Button disabled={!this.state.lat && !this.state.lng} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
+                            <Button disabled={!this.state.lat && !this.state.lng && !this.state.zip} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
                             <Button outline color="secondary" onClick={() => this.clearWeather()}>Clear</Button>
                         </InputGroupAddon>
                     </InputGroup>
