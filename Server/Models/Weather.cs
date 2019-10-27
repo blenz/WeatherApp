@@ -10,7 +10,7 @@ namespace Server.Models
         public int CurrentTemp { get; set; }
         public int MinTemp { get; set; }
         public int MaxTemp { get; set; }
-        public int Zip { get; set; }
+        public int? Zip { get; set; }
         public bool Cached { get; set; }
     }
 }

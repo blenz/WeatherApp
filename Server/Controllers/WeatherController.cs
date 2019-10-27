@@ -49,7 +49,7 @@ namespace WeatherApp.Controllers
         public async Task<IActionResult> PostWeather([FromBody] WeatherForCreationDto weatherForCreation)
         {
             // check for cached weather
-            var cachedWeather = checkCache(weatherForCreation.Zip);
+            var cachedWeather = checkCache(weatherForCreation);
             if (cachedWeather != null)
             {
                 cachedWeather.Cached = true;
@@ -101,9 +101,13 @@ namespace WeatherApp.Controllers
             }
         }
 
-        private Weather checkCache(int zip)
+        private Weather checkCache(WeatherForCreationDto weatherForCreationDto)
         {
-            var cached = _cache.Get(zip.ToString());
+            var key = weatherForCreationDto.Zip == null
+                ? weatherForCreationDto.Address
+                : weatherForCreationDto.Zip.ToString();
+
+            var cached = _cache.Get(key);
 
             if (cached != null)
             {
@@ -121,7 +125,9 @@ namespace WeatherApp.Controllers
 
         private void cacheWeather(Weather weather)
         {
-            string zipString = weather.Zip.ToString();
+            var key = weather.Zip == null
+                ? weather.Address
+                : weather.Zip.ToString();
 
             var options = new DistributedCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromMinutes(_redisConfig.Value.WeatherTtl));
@@ -130,7 +136,7 @@ namespace WeatherApp.Controllers
             {
                 new BinaryFormatter().Serialize(ms, weather);
 
-                _cache.Set(zipString, ms.ToArray(), options);
+                _cache.Set(key, ms.ToArray(), options);
             }
         }
 
