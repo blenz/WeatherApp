@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Header from './Header'
-import LocationInput from './LocationInput'
-import ResultsTable from './ResultsTable';
+import AddressInput from './AddressInput'
+import WeatherTable from './WeatherTable';
 
 class WeatherChecker extends Component {
     state = {
@@ -33,8 +33,8 @@ class WeatherChecker extends Component {
         return (
             <div className="wrapper">
                 <Header />
-                <LocationInput addWeather={this.addWeather} />
-                <ResultsTable weathers={this.state.weathers} />
+                <AddressInput addWeather={this.addWeather} />
+                <WeatherTable weathers={this.state.weathers} />
             </div>
         )
     }

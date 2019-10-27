@@ -5,7 +5,7 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { Container, Row, Col, InputGroup, Input, InputGroupAddon, Button } from 'reactstrap';
 
-class LocationInput extends Component {
+class AddressInput extends Component {
     initialState = {
         address: '',
         lat: null,
@@ -131,4 +131,4 @@ class LocationInput extends Component {
     }
 };
 
-export default LocationInput;
+export default AddressInput;

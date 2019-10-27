@@ -37,7 +37,7 @@ const columns = [
     },
 ];
 
-const ResultsTable = ({ weathers }) => (
+const WeatherTable = ({ weathers }) => (
     < Container className="p-5" >
         <Row>
             <h3>Results</h3>
@@ -71,4 +71,4 @@ const ResultsTable = ({ weathers }) => (
 );
 
 
-export default ResultsTable;
+export default WeatherTable;
