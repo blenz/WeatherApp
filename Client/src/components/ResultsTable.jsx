@@ -1,6 +1,14 @@
 import React from 'react';
 import { Container, Row, Badge } from 'reactstrap';
 
+const headers = [
+    'Address',
+    'Current Temp',
+    'Min Temp',
+    'Max Temp',
+    'Cached'
+];
+
 const ResultsTable = ({ weathers }) => (
     < Container className="p-5" >
         <Row>
@@ -10,25 +18,23 @@ const ResultsTable = ({ weathers }) => (
             <table className='table table-striped'>
                 <thead>
                     <tr>
-                        <th>Address</th>
-                        <th>Current Temp</th>
-                        <th>Min Temp</th>
-                        <th>Max Temp</th>
-                        <th>Cached</th>
+                        {headers.map((header, i) =>
+                            <th key={i}>{header}</th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        weathers.map((weather, i) => (
-                            <tr key={i}>
-                                <td>{weather.address}</td>
+                        weathers.map(weather => (
+                            <tr key={weather.id}>
+                                <td className="text-left">{weather.address}</td>
                                 <td>{weather.currentTemp}</td>
                                 <td>{weather.minTemp}</td>
                                 <td>{weather.maxTemp}</td>
                                 <td>
                                     {weather.cached
                                         ? <Badge color="danger" pill>Hit</Badge>
-                                        : <Badge color="secondary" pill>Miss</Badge>
+                                        : <Badge color="success" pill>Miss</Badge>
                                     }
                                 </td>
                             </tr>
