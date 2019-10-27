@@ -40,7 +40,9 @@ namespace WeatherApp.Controllers
         [HttpGet]
         public ActionResult<Weather> GetWeather()
         {
-            var weather = _context.Weather.ToList();
+            var weather = _context.Weather
+                .OrderByDescending(w => w.Id)
+                .ToList();
 
             return Ok(weather);
         }

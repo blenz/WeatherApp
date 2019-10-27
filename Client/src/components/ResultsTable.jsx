@@ -1,12 +1,38 @@
 import React from 'react';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Container, Row, Badge } from 'reactstrap';
 
-const headers = [
-    'Address',
-    'Current Temp',
-    'Min Temp',
-    'Max Temp',
-    'Cached'
+const columns = [
+    {
+        text: 'Address',
+        dataField: 'address',
+        align: 'left',
+        sort: true,
+    },
+    {
+        text: 'Current Temp',
+        dataField: 'currentTemp',
+        sort: true
+    },
+    {
+        text: 'Min Temp',
+        dataField: 'minTemp',
+        sort: true
+    },
+    {
+        text: 'Max Temp',
+        dataField: 'maxTemp',
+        sort: true
+    },
+    {
+        text: 'Cached',
+        dataField: 'cached',
+        sort: true,
+        formatter: (cell) => cell
+            ? <Badge color='success' pill>Hit</Badge>
+            : <Badge color='danger' pill>Miss</Badge>
+    },
 ];
 
 const ResultsTable = ({ weathers }) => (
@@ -15,33 +41,15 @@ const ResultsTable = ({ weathers }) => (
             <h3 className="float-left">Results</h3>
         </Row>
         <Row>
-            <table className='table table-striped'>
-                <thead>
-                    <tr>
-                        {headers.map((header, i) =>
-                            <th key={i}>{header}</th>
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        weathers.map(weather => (
-                            <tr key={weather.id}>
-                                <td className="text-left">{weather.address}</td>
-                                <td>{weather.currentTemp}</td>
-                                <td>{weather.minTemp}</td>
-                                <td>{weather.maxTemp}</td>
-                                <td>
-                                    {weather.cached
-                                        ? <Badge color="success" pill>Hit</Badge>
-                                        : <Badge color="danger" pill>Miss</Badge>
-                                    }
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
+            <Container>
+                <BootstrapTable
+                    keyField='id'
+                    data={weathers}
+                    columns={columns}
+                    striped
+                    pagination={paginationFactory()}
+                />
+            </Container>
         </Row>
     </Container >
 );

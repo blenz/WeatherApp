@@ -25,7 +25,7 @@ class WeatherChecker extends Component {
 
     addWeather = (weather) => {
         this.setState({
-            weathers: [...this.state.weathers, weather]
+            weathers: [weather, ...this.state.weathers]
         })
     }
 
