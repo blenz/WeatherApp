@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Server.Dto;
 using Server.Models;
+using WeatherApp.Data;
 using WeatherApp.Helpers;
 
 namespace WeatherApp.Controllers
@@ -20,19 +22,30 @@ namespace WeatherApp.Controllers
         private readonly IOptions<OpenWeatherConfig> _openWeatherConfig;
         private readonly IOptions<RedisConfig> _redisConfig;
         private readonly IDistributedCache _cache;
+        private readonly DataContext _context;
 
         public WeatherController(
             IOptions<OpenWeatherConfig> openWeatherConfig,
             IOptions<RedisConfig> redisConfig,
-            IDistributedCache cache
+            IDistributedCache cache,
+            DataContext context
         )
         {
             _openWeatherConfig = openWeatherConfig;
             _redisConfig = redisConfig;
             _cache = cache;
+            _context = context;
         }
 
-        [HttpPost()]
+        [HttpGet]
+        public ActionResult<Weather> GetWeather()
+        {
+            var weather = _context.Weather.ToList();
+
+            return Ok(weather);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> PostWeather([FromBody] WeatherForCreationDto weatherForCreation)
         {
             // check for cached weather
@@ -41,7 +54,11 @@ namespace WeatherApp.Controllers
             {
                 cachedWeather.Cached = true;
 
-                return Ok(cachedWeather);
+                // persist to db
+                _context.Weather.Add(cachedWeather);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetWeather), new { id = cachedWeather.Id }, cachedWeather);
             }
 
             // if not cached, call to openweather api
@@ -61,9 +78,9 @@ namespace WeatherApp.Controllers
                     var weather = new Weather
                     {
                         Address = weatherForCreation.Address,
-                        CurrentTemp = float.Parse(weatherResponse.Main.CurrentTemp),
-                        MinTemp = float.Parse(weatherResponse.Main.MinTemp),
-                        MaxTemp = float.Parse(weatherResponse.Main.MaxTemp),
+                        CurrentTemp = (int) Convert.ToDouble(weatherResponse.Main.CurrentTemp),
+                        MinTemp = (int) Convert.ToDouble(weatherResponse.Main.MinTemp),
+                        MaxTemp = (int) Convert.ToDouble(weatherResponse.Main.MaxTemp),
                         Zip = weatherForCreation.Zip,
                         Cached = false
                     };
@@ -71,7 +88,11 @@ namespace WeatherApp.Controllers
                     // cache the weather
                     cacheWeather(weather);
 
-                    return Ok(weather);
+                    // persist to db
+                    _context.Weather.Add(weather);
+                    await _context.SaveChangesAsync();
+
+                    return CreatedAtAction(nameof(GetWeather), new { id = weather.Id }, weather);
                 }
                 catch (HttpRequestException httpRequestException)
                 {

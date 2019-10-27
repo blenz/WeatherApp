@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WeatherApp.Data;
 using WeatherApp.Helpers;
 
 namespace WeatherApp
@@ -32,6 +34,9 @@ namespace WeatherApp
                 option.Configuration = redisConfig.Configuration;
                 option.InstanceName = redisConfig.InstanceName;
             });
+
+            services.AddDbContext<DataContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
