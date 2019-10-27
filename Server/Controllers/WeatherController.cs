@@ -68,6 +68,7 @@ namespace WeatherApp.Controllers
             {
                 try
                 {
+                    // query openweather
                     client.BaseAddress = new Uri(_openWeatherConfig.Value.Uri);
 
                     var query = $"?appid={_openWeatherConfig.Value.Key}&units=imperial&lat={weatherForCreation.Lat}&lon={weatherForCreation.Lng}";
@@ -77,6 +78,7 @@ namespace WeatherApp.Controllers
 
                     var weatherResponse = JsonConvert.DeserializeObject<OpenWeatherResponse>(content);
 
+                    // create new weather
                     var weather = new Weather
                     {
                         Address = weatherForCreation.Address,
@@ -105,28 +107,28 @@ namespace WeatherApp.Controllers
 
         private Weather checkCache(WeatherForCreationDto weatherForCreationDto)
         {
+            // use zip as cache key else address
             var key = weatherForCreationDto.Zip == null
                 ? weatherForCreationDto.Address
                 : weatherForCreationDto.Zip.ToString();
 
             var cached = _cache.Get(key);
 
-            if (cached != null)
+            if (cached == null)
+                return null;
+
+            using(var ms = new MemoryStream(cached))
             {
-                using(var ms = new MemoryStream(cached))
-                {
-                    var cachedWeather = new BinaryFormatter()
-                        .Deserialize(ms) as Weather;
+                var cachedWeather = new BinaryFormatter()
+                    .Deserialize(ms) as Weather;
 
-                    return cachedWeather;
-                }
+                return cachedWeather;
             }
-
-            return null;
         }
 
         private void cacheWeather(Weather weather)
         {
+            // use zip as cache key else address
             var key = weather.Zip == null
                 ? weather.Address
                 : weather.Zip.ToString();
