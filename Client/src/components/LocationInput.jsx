@@ -24,8 +24,6 @@ class LocationInput extends Component {
 
             address = results[0].formatted_address;
 
-            console.log(results)
-
             let zip = results[0]
                 .address_components.filter(c => {
                     return c.types.includes('postal_code')
@@ -107,7 +105,7 @@ class LocationInput extends Component {
                             })}
                         </ul>
                         <InputGroupAddon addonType="append">
-                            <Button disabled={!this.state.lat && !this.state.lng} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
+                            <Button disabled={!this.state.lat && !this.state.lng && !this.state.zip} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
                             <Button outline color="secondary" onClick={() => this.clearWeather()}>Clear</Button>
                         </InputGroupAddon>
                     </InputGroup>
