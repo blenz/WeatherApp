@@ -8,6 +8,21 @@ class WeatherChecker extends Component {
         weathers: []
     }
 
+    async componentDidMount() {
+        try {
+            const response = await fetch(
+                process.env.REACT_APP_WEATHER_URL,
+            );
+
+            const weathers = await response.json();
+
+            this.setState({ weathers })
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     addWeather = (weather) => {
         this.setState({
             weathers: [...this.state.weathers, weather]
