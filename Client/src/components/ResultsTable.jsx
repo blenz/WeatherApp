@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import { Container, Row, Badge } from 'reactstrap';
 
+const { SearchBar } = Search;
 const columns = [
     {
         text: 'Address',
@@ -38,17 +40,31 @@ const columns = [
 const ResultsTable = ({ weathers }) => (
     < Container className="p-5" >
         <Row>
-            <h3 className="float-left">Results</h3>
+            <h3>Results</h3>
         </Row>
         <Row>
             <Container>
-                <BootstrapTable
-                    keyField='id'
+                <ToolkitProvider
+                    keyField="id"
                     data={weathers}
                     columns={columns}
-                    striped
-                    pagination={paginationFactory()}
-                />
+                    search
+                >
+                    {
+                        props => (
+                            <Fragment>
+                                <div className='float-right'>
+                                    <SearchBar {...props.searchProps} />
+                                </div>
+                                <BootstrapTable
+                                    {...props.baseProps}
+                                    striped
+                                    pagination={paginationFactory()}
+                                />
+                            </Fragment>
+                        )
+                    }
+                </ToolkitProvider>
             </Container>
         </Row>
     </Container >
