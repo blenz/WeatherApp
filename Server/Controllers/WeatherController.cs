@@ -68,7 +68,7 @@ namespace WeatherApp.Controllers
                 {
                     client.BaseAddress = new Uri(_openWeatherConfig.Value.Uri);
 
-                    var query = $"?appid={_openWeatherConfig.Value.Key}&units=imperial&lat={weatherForCreation.Lat}&lon={weatherForCreation.Lon}";
+                    var query = $"?appid={_openWeatherConfig.Value.Key}&units=imperial&lat={weatherForCreation.Lat}&lon={weatherForCreation.Lng}";
 
                     var response = await client.GetAsync(query);
                     var content = await response.Content.ReadAsStringAsync();

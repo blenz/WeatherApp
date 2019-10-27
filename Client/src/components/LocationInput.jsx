@@ -9,20 +9,20 @@ class LocationInput extends Component {
     initialState = {
         address: '',
         lat: null,
-        lon: null,
+        lng: null,
         zip: null
     };
     state = this.initialState;
 
     handleSelect = async address => {
 
-        this.setState({ address });
-
         try {
 
             const results = await geocodeByAddress(address);
 
-            const latLon = await getLatLng(results[0]);
+            const latLng = await getLatLng(results[0]);
+
+            address = results[0].formatted_address;
 
             const zip = parseInt(
                 results[0]
@@ -31,8 +31,9 @@ class LocationInput extends Component {
             );
 
             this.setState({
-                lat: latLon.lat,
-                lon: latLon.lng,
+                address,
+                lat: latLng.lat,
+                lng: latLng.lng,
                 zip
             });
         }
@@ -101,7 +102,7 @@ class LocationInput extends Component {
                             })}
                         </ul>
                         <InputGroupAddon addonType="append">
-                            <Button disabled={!this.state.lat && !this.state.lon} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
+                            <Button disabled={!this.state.lat && !this.state.lng} color="success" onClick={() => this.searchWeather()}>Get Weather</Button>
                             <Button outline color="secondary" onClick={() => this.clearWeather()}>Clear</Button>
                         </InputGroupAddon>
                     </InputGroup>

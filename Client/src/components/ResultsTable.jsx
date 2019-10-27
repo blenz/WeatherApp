@@ -33,8 +33,8 @@ const ResultsTable = ({ weathers }) => (
                                 <td>{weather.maxTemp}</td>
                                 <td>
                                     {weather.cached
-                                        ? <Badge color="danger" pill>Hit</Badge>
-                                        : <Badge color="success" pill>Miss</Badge>
+                                        ? <Badge color="success" pill>Hit</Badge>
+                                        : <Badge color="danger" pill>Miss</Badge>
                                     }
                                 </td>
                             </tr>
