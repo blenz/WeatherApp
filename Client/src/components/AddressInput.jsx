@@ -48,8 +48,7 @@ class AddressInput extends Component {
 
     searchWeather = async () => {
         try {
-            const response = await fetch(
-                process.env.REACT_APP_WEATHER_URL,
+            const response = await fetch('/api/weather',
                 {
                     method: 'POST',
                     headers: {

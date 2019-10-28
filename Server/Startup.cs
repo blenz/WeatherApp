@@ -50,6 +50,15 @@ namespace WeatherApp
                 app.UseHsts();
             }
 
+            // run db migrations
+            using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using(var context = scope.ServiceProvider.GetService<DataContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
+
             app.UseCors(x =>
                 x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
             );

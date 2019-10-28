@@ -10,9 +10,7 @@ class WeatherChecker extends Component {
 
     async componentDidMount() {
         try {
-            const response = await fetch(
-                process.env.REACT_APP_WEATHER_URL,
-            );
+            const response = await fetch('/api/weather');
 
             const weathers = await response.json();
 
