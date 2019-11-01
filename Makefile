@@ -15,7 +15,7 @@ deploy:
 	@docker build --rm \
 		-t ${DOCKER_USERNAME}/$(FRONTEND_NAME):latest \
 		-t ${DOCKER_USERNAME}/$(FRONTEND_NAME):$(HASH) \
-		-f Client/build/prod/Dockerfile Client
+		-f Client/prod/Dockerfile Client
 
 	@docker push ${DOCKER_USERNAME}/$(FRONTEND_NAME):latest
 	@docker push ${DOCKER_USERNAME}/$(FRONTEND_NAME):$(HASH)
