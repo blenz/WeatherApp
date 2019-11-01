@@ -6,6 +6,6 @@ This project allows users to input an address and display weather information. T
 
 # Commands
 
-- make client-dev
-- make server-dev
-- make deploy (requires kubernetes / docker configuration)
+- `make client-dev`
+- `make server-dev`
+- `make deploy` (requires kubernetes / docker configuration)
