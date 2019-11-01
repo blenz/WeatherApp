@@ -11,6 +11,7 @@ server-dev:
 	@dotnet watch --project Server run
 
 deploy:
+	# deploy client
 	@docker build --rm \
 		-t ${DOCKER_USERNAME}/$(FRONTEND_NAME):latest \
 		-t ${DOCKER_USERNAME}/$(FRONTEND_NAME):$(HASH) \
@@ -23,6 +24,7 @@ deploy:
 		deployments/$(FRONTEND_NAME) \
 		$(FRONTEND_NAME)=${DOCKER_USERNAME}/$(FRONTEND_NAME):$(HASH)
 
+	# deploy server
 	@docker build --rm \
 		-t ${DOCKER_USERNAME}/$(BACKEND_NAME):latest \
 		-t ${DOCKER_USERNAME}/$(BACKEND_NAME):$(HASH) \
