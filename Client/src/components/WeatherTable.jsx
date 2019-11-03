@@ -5,6 +5,7 @@ import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import { Container, Row, Badge } from 'reactstrap';
 
 const { SearchBar } = Search;
+
 const columns = [
     {
         text: 'Address',
@@ -13,17 +14,17 @@ const columns = [
         sort: true,
     },
     {
-        text: 'Current Temp',
+        text: 'Current Temp (°F)',
         dataField: 'currentTemp',
         sort: true
     },
     {
-        text: 'Min Temp',
+        text: 'Min Temp (°F)',
         dataField: 'minTemp',
         sort: true
     },
     {
-        text: 'Max Temp',
+        text: 'Max Temp (°F)',
         dataField: 'maxTemp',
         sort: true
     },
